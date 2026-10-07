@@ -81,23 +81,24 @@ def train_model(sequence_length):
 
 if __name__ == "__main__":
 
-    model, losses, X_test, y_test = train_model(10)
+    for length in [5, 10, 20]:
 
-    torch.save(
-        model.state_dict(),
-        "results/rnn_model_length10.pth"
-    )
+        print(
+            f"\nTraining sequence length: {length}"
+        )
 
-    plt.plot(losses)
+        model, losses, X_test, y_test = train_model(
+            length
+        )
 
-    plt.title("RNN Training Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
+        torch.save(
+            model.state_dict(),
+            f"results/rnn_model_length{length}.pth"
+        )
 
-    plt.savefig(
-        "results/training_curve.png"
-    )
-
+        print(
+            f"Model for length {length} saved."
+        )
     plt.close()
 
     print("Training completed.")
