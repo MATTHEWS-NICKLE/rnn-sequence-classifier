@@ -1,4 +1,5 @@
 import torch
+import matplotlib.pyplot as plt
 
 from train_rnn import RNNClassifier
 
@@ -32,17 +33,41 @@ def predict_sequence(sequence, model_path):
     else:
         label = "Decreasing"
 
-    print("Input sequence:")
-    print(sequence)
+    return label, probability
 
-    print(
-        f"Predicted class: {label}"
+
+def plot_prediction(
+    sequence,
+    label,
+    probability,
+    filename
+):
+
+    plt.figure(figsize=(8, 5))
+
+    plt.plot(
+        range(1, len(sequence) + 1),
+        sequence,
+        marker="o"
     )
 
-    print(
-        f"Increasing probability: "
-        f"{probability:.4f}"
+    plt.xlabel("Time Step")
+    plt.ylabel("Sequence Value")
+
+    plt.title(
+        f"RNN Prediction: {label}\n"
+        f"Increasing Probability: {probability:.4f}"
     )
+
+    plt.grid(True)
+
+    plt.savefig(
+        filename,
+        dpi=300,
+        bbox_inches="tight"
+    )
+
+    plt.close()
 
 
 if __name__ == "__main__":
@@ -60,7 +85,31 @@ if __name__ == "__main__":
         11.2
     ]
 
-    predict_sequence(
+    label, probability = predict_sequence(
         new_sequence,
         "results/rnn_model_length10.pth"
+    )
+
+    print("Input sequence:")
+    print(new_sequence)
+
+    print(
+        f"\nPredicted class: {label}"
+    )
+
+    print(
+        f"Increasing probability: "
+        f"{probability:.4f}"
+    )
+
+    plot_prediction(
+        new_sequence,
+        label,
+        probability,
+        "results/predictions.png"
+    )
+
+    print(
+        "\nPrediction graph saved to "
+        "results/predictions.png"
     )
